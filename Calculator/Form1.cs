@@ -98,26 +98,32 @@ namespace Calculator
 
         private void button20_Click(object sender, EventArgs e) //+
         {
-
             if (_operationIsChoosed && _currentNumber.Length == 0)
                 return;
 
             var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
             _operationIsChoosed = true;
+            var calculate = true;
 
-            if(_lastOperation != "")
+            if(_lastOperation != "" && _lastOperation != null)
             {
-                //_operationExecuter.ExecuteLastOperation()
+                _operationExecuter.ExecuteLastOperation(_lastOperation, insertedNumber);
+                calculate = false;
             }
 
-            if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0)
+            if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0 && calculate)
             {
                 var newNumber = _calculator.Sum(_calculator.CurrentValue, insertedNumber);
                 FinishOperation(newNumber, "+");
                 return;
             }
 
-            _calculator.CurrentValue = insertedNumber;
+            if(_calculator.CurrentValue == 0d)
+            {
+                _calculator.CurrentValue = insertedNumber;
+            }
+
+            _lastOperation = "+";
             _currentNumber = "";
 
             _view.AddNewTextToMainCalcLabel("+");
@@ -130,17 +136,28 @@ namespace Calculator
 
             var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
             _operationIsChoosed = true;
+            var calculate = true;
 
-            if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0)
+            if (_lastOperation != "" && _lastOperation != null)
+            {
+                _operationExecuter.ExecuteLastOperation(_lastOperation, insertedNumber);
+                calculate = false;
+            }
+
+            if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0 && calculate)
             {
                 var newNumber = _calculator.Subtraction(_calculator.CurrentValue, insertedNumber);
                 FinishOperation(newNumber, "-");
                 return;
             }
 
-            _calculator.CurrentValue = insertedNumber;
-            _currentNumber = "";
+            if (_calculator.CurrentValue == 0d)
+            {
+                _calculator.CurrentValue = insertedNumber;
+            }
 
+            _lastOperation = "-";
+            _currentNumber = "";
             _view.AddNewTextToMainCalcLabel("-");
         }
 
@@ -151,6 +168,91 @@ namespace Calculator
             _currentNumber = "";
             _view.ClearLabel();
         }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            if (_operationIsChoosed && _currentNumber.Length == 0)
+                return;
+
+            var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
+            _operationIsChoosed = true;
+            var calculate = true;
+
+            if (_lastOperation != "" && _lastOperation != null)
+            {
+                _operationExecuter.ExecuteLastOperation(_lastOperation, insertedNumber);
+                calculate = false;
+            }
+
+            if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0 && calculate)
+            {
+                var newNumber = _calculator.Multiplication(_calculator.CurrentValue, insertedNumber);
+                FinishOperation(newNumber, "*");
+                return;
+            }
+
+            if (_calculator.CurrentValue == 0d)
+            {
+                _calculator.CurrentValue = insertedNumber;
+            }
+
+            _lastOperation = "*";
+            _currentNumber = "";
+            _view.AddNewTextToMainCalcLabel("*");
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            if (_operationIsChoosed && _currentNumber.Length == 0)
+                return;
+
+            var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
+            _operationIsChoosed = true;
+            var calculate = true;
+
+            if (_lastOperation != "" && _lastOperation != null)
+            {
+                _operationExecuter.ExecuteLastOperation(_lastOperation, insertedNumber);
+                calculate = false;
+            }
+
+            if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0 && calculate)
+            {
+                var newNumber = _calculator.Division(_calculator.CurrentValue, insertedNumber);
+                FinishOperation(newNumber, "/");
+                return;
+            }
+
+            if (_calculator.CurrentValue == 0d)
+            {
+                _calculator.CurrentValue = insertedNumber;
+            }
+
+            _lastOperation = "/";
+            _currentNumber = "";
+            _view.AddNewTextToMainCalcLabel("/");
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            if (_operationIsChoosed && _currentNumber.Length == 0)
+                return;
+
+            var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
+            _operationIsChoosed = false;
+            var calculate = true;
+
+            if (_lastOperation != "" && _lastOperation != null)
+            {
+                _operationExecuter.ExecuteLastOperation(_lastOperation, insertedNumber);
+                calculate = false;
+            }
+
+            _view.ClearMainCalcLabel();
+            _view.AddNewTextToMainCalcLabel(_calculator.CurrentValue.ToString());
+            _currentNumber = "";
+        }
+
 
         public void FinishOperation(double newNumber, string sign)
         {

@@ -11,34 +11,38 @@
             _main = main;
         }
 
-        public void ExecuteLastOperation(int operationNumber, double currentValue)
+        public void ExecuteLastOperation(string operationNumber, double currentValue)
         {
             var number = operationNumber;
 
             switch (number)
             {
-                case 1:
+                case "+":
                     {
                         var newNumber = _calculator.Sum(_calculator.CurrentValue, currentValue);
-                        _main.FinishOperation(newNumber, "+");
+                        _main.FinishOperation(newNumber, "");
+                        _calculator.CurrentValue = newNumber;
                         break;
                     }
-                case 2:
+                case "-":
                     {
                         var newNumber = _calculator.Subtraction(_calculator.CurrentValue, currentValue);
-                        _main.FinishOperation(newNumber, "-");
+                        _main.FinishOperation(newNumber, "");
+                        _calculator.CurrentValue = newNumber;
                         break;
                     }
-                case 3:
+                case "/":
                     {
                         var newNumber = _calculator.Division(_calculator.CurrentValue, currentValue);
-                        _main.FinishOperation(newNumber, "/");
+                        _main.FinishOperation(newNumber, "");
+                        _calculator.CurrentValue = newNumber;
                         break;
                     }
-                case 4:
+                case "*":
                     {
                         var newNumber = _calculator.Multiplication(_calculator.CurrentValue, currentValue);
-                        _main.FinishOperation(newNumber, "*");
+                        _main.FinishOperation(newNumber, "");
+                        _calculator.CurrentValue = newNumber;
                         break;
                     }
             }
