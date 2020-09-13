@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,8 +24,10 @@ namespace Calculator
 
         private Calculator _calculator;
         private View _view;
+        private LastOperationExecuter _operationExecuter;
 
         private bool _operationIsChoosed;
+        private string _lastOperation;
         private string _currentNumber;
 
         public Form1()
@@ -36,6 +39,7 @@ namespace Calculator
         {
             _calculator = new Calculator();
             _view = new View(ref label1, ref textBox1);
+            _operationExecuter = new LastOperationExecuter(_calculator, this);
         }
 
         private void button12_Click(object sender, EventArgs e) //1
@@ -94,27 +98,23 @@ namespace Calculator
 
         private void button20_Click(object sender, EventArgs e) //+
         {
-            var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
 
             if (_operationIsChoosed && _currentNumber.Length == 0)
                 return;
 
+            var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
             _operationIsChoosed = true;
+
+            if(_lastOperation != "")
+            {
+                //_operationExecuter.ExecuteLastOperation()
+            }
 
             if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0)
             {
-                if (insertedNumber == 0d)
-                    return;
-
                 var newNumber = _calculator.Sum(_calculator.CurrentValue, insertedNumber);
-                _calculator.CurrentValue = newNumber;
-
-                _view.UpdateResult(newNumber);
-                _view.ClearMainCalcLabel();
-                _view.AddNewTextToMainCalcLabel(_calculator.CurrentValue.ToString() + "+");
-                _currentNumber = "";
+                FinishOperation(newNumber, "+");
                 return;
-
             }
 
             _calculator.CurrentValue = insertedNumber;
@@ -125,24 +125,16 @@ namespace Calculator
 
         private void button19_Click(object sender, EventArgs e) //-
         {
-            var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
-
             if (_operationIsChoosed && _currentNumber.Length == 0)
                 return;
-            
+
+            var insertedNumber = _calculator.CheckIfIsNumber(_currentNumber);
             _operationIsChoosed = true;
+
             if (_calculator.CurrentValue != 0 && _currentNumber.Length != 0)
             {
-                if (insertedNumber == 0d)
-                    return;
-
                 var newNumber = _calculator.Subtraction(_calculator.CurrentValue, insertedNumber);
-                _calculator.CurrentValue = newNumber;
-
-                _view.UpdateResult(newNumber);
-                _view.ClearMainCalcLabel();
-                _view.AddNewTextToMainCalcLabel(_calculator.CurrentValue.ToString() + "-");
-                _currentNumber = "";
+                FinishOperation(newNumber, "-");
                 return;
             }
 
@@ -160,15 +152,12 @@ namespace Calculator
             _view.ClearLabel();
         }
 
-        private void DOOperation(Func<double, double, OperationResult> operation, double insertedNumber)
+        public void FinishOperation(double newNumber, string sign)
         {
-            var operationResult = operation(_calculator.CurrentValue, insertedNumber);
-            var newNumber = operationResult.result;
-
             _calculator.CurrentValue = newNumber;
             _view.UpdateResult(newNumber);
             _view.ClearMainCalcLabel();
-            _view.AddNewTextToMainCalcLabel(_calculator.CurrentValue.ToString() + "-");
+            _view.AddNewTextToMainCalcLabel(_calculator.CurrentValue.ToString() + sign);
             _currentNumber = "";
 
         }
