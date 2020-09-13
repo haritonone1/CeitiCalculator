@@ -96,6 +96,12 @@ namespace Calculator
             _view.AddNewTextToMainCalcLabel("9");
         }
 
+        private void button14_Click(object sender, EventArgs e) //0
+        {
+            _currentNumber += 0.ToString();
+            _view.AddNewTextToMainCalcLabel("0");
+        }
+
         private void button20_Click(object sender, EventArgs e) //+
         {
             if (_operationIsChoosed && _currentNumber.Length == 0)
@@ -164,12 +170,12 @@ namespace Calculator
         private void button2_Click(object sender, EventArgs e) //C
         {
             _view.ClearMainCalcLabel();
+            _view.ClearLabel();
             _calculator.CurrentValue = 0d;
             _currentNumber = "";
-            _view.ClearLabel();
         }
 
-        private void button18_Click(object sender, EventArgs e)
+        private void button18_Click(object sender, EventArgs e) // *
         {
             if (_operationIsChoosed && _currentNumber.Length == 0)
                 return;
@@ -201,7 +207,7 @@ namespace Calculator
             _view.AddNewTextToMainCalcLabel("*");
         }
 
-        private void button17_Click(object sender, EventArgs e)
+        private void button17_Click(object sender, EventArgs e) // (/)
         {
             if (_operationIsChoosed && _currentNumber.Length == 0)
                 return;
@@ -233,7 +239,7 @@ namespace Calculator
             _view.AddNewTextToMainCalcLabel("/");
         }
 
-        private void button13_Click(object sender, EventArgs e)
+        private void button13_Click(object sender, EventArgs e) // =
         {
             if (_operationIsChoosed && _currentNumber.Length == 0)
                 return;
@@ -253,8 +259,16 @@ namespace Calculator
             _currentNumber = "";
         }
 
+        private void button3_Click(object sender, EventArgs e) // <=
+        {
+            if (textBox1.Text.Length > 0 && _currentNumber.Length > 0)
+            {
+                textBox1.Text = textBox1.Text.Remove(textBox1.Text.Length - 1,1);
+                _currentNumber = _currentNumber.Remove(_currentNumber.Length - 1, 1);
+            }
+        }
 
-        public void FinishOperation(double newNumber, string sign)
+        public void FinishOperation(double newNumber, string sign) 
         {
             _calculator.CurrentValue = newNumber;
             _view.UpdateResult(newNumber);
@@ -263,5 +277,6 @@ namespace Calculator
             _currentNumber = "";
 
         }
+
     }
 }
